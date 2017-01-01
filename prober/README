@@ -1,0 +1,69 @@
+######################################################################
+#																	 #
+#	PROBER:															 #
+#																	 #
+#	AUTHOR > Michael Laucella										 #
+#																	 #
+#	DATE LAST MODIFIED > 10/6/2016									 #
+#																	 #
+#	DESCRIPTION > Querries url for response and logs the response	 #
+#		does this in a non ending cyclical fashion every 30 seconds	 #
+#		to end this use a Ctrl-c or any other process kill command	 #
+#																	 #
+######################################################################
+
+File Structure:
+	src->
+		Client.h
+		Connect.h
+		Client.cpp
+		Connect.cpp
+		Prober.cpp
+	bin->
+		normal.sh
+		debug.sh
+		monitor.sh
+		results->
+			(files saved from program go here)
+
+Compilation:
+	There a few combinations that can be made for the compilation
+	depending on the data you prefer to see
+
+	MONITOR: mode allows the user to see the status code and time 		written to the file as well as the connections state 
+		1==open 0==closed
+
+	DEBUG: will print any unix errors as errno string equivalent
+		to the terminal. This only prints errors for the connection
+		any other errors in the prober are deemed fatal and print
+		a message regardless
+
+	CHUNK: in the current mode the process will run until it timesout
+		however by activating chunk mode it assumes a transfer encoding of chunked with a \r\n\r\n delimiter, note this is an assumption and therefore if a recv call perfectly places the end of header \r\n\r\n at the end of the buffer it will return only the head. However it is fairly unlikely, also note this will not work on non chunk encoded bodies and will default to timing out 
+
+	any of these flags can be used when compiling if the user wishes to view any additional data to access any of these modes set g++
+
+	with the -D flag and then the modes selected CHUNK/DEBUG/MONITOR
+		ex: g++ -D CHUNK DEBUG -o prober .....
+
+	for regular compilation run the shell "normal" script which performs g++ -o prober prober.cpp Connect.cpp Client.cpp
+
+	for Debug compilation run the "debug" script -> produces Dprober
+	for Monitor run the "monitor" script -> produces Mprober
+	
+	for any custom compilations use:									g++ -D [modeFlags] -o [outputName] prober.cpp Connect.cpp 		Client.cpp
+
+	the scripts can be found in bin as well as all the compiled versions
+
+Run:
+	doesnt need to be run from bin folder but obviously 
+	add the path to the program when running ex: stuff/stuff/prober
+
+	to run simply type ./prober [siteName] [optionalPath]
+
+	if no path is provided it defaults to root "/"
+
+	if no name is provided it raises an error and exits the program
+
+	for name enter name as a www.sitename.com or sitename do not enter
+	as http://www.sitename.com

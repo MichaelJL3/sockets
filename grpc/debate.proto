@@ -1,0 +1,31 @@
+//debate.proto
+
+//using syntax 3
+syntax ="proto3";
+
+//service for rpc protocol
+service Controller{
+	rpc Answer(AnswerRequest) returns(AnswerReply){}
+	rpc Elaborate(ElaborateRequest) returns(ElaborateReply){}
+}
+
+//the arguments for the question(answer) request
+message AnswerRequest{
+	string question=1;
+}
+
+//the reply for a question(answer)
+message AnswerReply{
+	string answer=1;
+}
+
+//the arguments for an elaborate request
+message ElaborateRequest{
+	string topic=1;
+	repeated int32 blah_run=2;
+}
+
+//the reply for an elaborate request
+message ElaborateReply{
+	string answer=1;
+}
